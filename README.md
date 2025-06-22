@@ -7,7 +7,7 @@ This space includes all training exercises, tasks, and final projects for the JO
 
 ## 🗓️ Internship Timeline
 
-```text
+
 📆 Duration       : June 10, 2025 — November 2025
 📚 Training Phase : June 10 — July 31
 🛠️ Project Phase  : August — November
