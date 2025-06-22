@@ -12,20 +12,32 @@ This space includes all training exercises, tasks, and final projects for the JO
 📚 Training Phase : June 10 — July 31
 🛠️ Project Phase  : August — November
 
-## 🧑‍💻 Tech Stack Overview
-
-### 🖥️ Frontend
-- HTML, CSS, JavaScript
-- Bootstrap / TailwindCSS
-- React.js
-
-### ⚙️ Backend
-- Node.js
-- Express.js
-
-### 🗃️ Database
-- MongoDB
+## 🧰 Tech Stack Overview
 
 ---
+
+### 🖼️ Frontend Technologies
+- **HTML5**, **CSS3**, **JavaScript (ES6+)**
+- Responsive Design with **Bootstrap** / **Tailwind CSS**
+- Component-based UI with **React.js**
+
+---
+
+### 🔧 Backend Technologies
+- Server-side scripting with **Node.js**
+- RESTful APIs using **Express.js**
+- Database handling with **MongoDB** / **MySQL**
+
+---
+
+### 🛠 Tools & Utilities
+- Code Editor: **Visual Studio Code**
+- API Testing: **Postman**
+- Version Control: **Git & GitHub**
+
+---
+
+### 🚀 Deployment Platforms
+- **Netlify**, **Vercel**, **Render**, **Railway**
 
 Stay tuned for updates as I progress through the internship 🚀
