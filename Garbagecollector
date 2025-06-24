@@ -1,1 +1,12 @@
+// studying about garbage collector
 
+let person = {
+  name: "Alice"
+};
+
+console.log(person.name); // Alice
+
+// Now remove the reference
+person = null; 
+
+//  Garbage Collector will automatically remove the object from memory
