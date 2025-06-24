@@ -1,1 +1,15 @@
+var x1 = 100;
+console.log(x1);
 
+function sumOfTwo(num1, num2) {
+  let ans = num1 + num2;
+  return ans;
+}
+
+let sumOfTwoBy = sumOfTwo(2, 3);
+console.log(sumOfTwoBy);
+
+console.log(x1);
+
+var x2 = 20;
+console.log(x2);
