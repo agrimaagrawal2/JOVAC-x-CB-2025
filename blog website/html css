@@ -1,1 +1,255 @@
+-> index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blog App</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    section { display: none; }
+    section.active { display: block; }
+    nav button { margin: 5px; }
+    .blog-card { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
+  </style>
+</head>
+<body>
 
+  <!-- Navigation -->
+  <nav>
+    <button onclick="showSection('blogPage')">Blogs</button>
+    <button onclick="showSection('createBlog')">Create</button>
+    <button onclick="showSection('login')">Login</button>
+    <button onclick="showSection('register')">Register</button>
+  </nav>
+
+  <!-- Blog Page -->
+  <section id="blogPage" class="active">
+    <h1>All Blog Posts</h1>
+    <div id="blogs"></div>
+  </section>
+
+  <!-- Create Blog -->
+  <section id="createBlog">
+    <h2>Create New Blog Post</h2>
+    <form id="blogForm" enctype="multipart/form-data">
+      <input type="text" name="title" placeholder="Title" required /><br/>
+      <input type="text" name="description" placeholder="Description" required /><br/>
+      <textarea name="content" placeholder="Content" required></textarea><br/>
+      <input type="file" name="image" accept="image/*" required /><br/>
+      <button type="submit">Post Blog</button>
+    </form>
+  </section>
+
+  <!-- Login -->
+  <section id="login">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email" required /><br/>
+      <input type="password" id="loginPassword" placeholder="Password" required /><br/>
+      <button type="submit">Login</button>
+    </form>
+  </section>
+
+  <!-- Register -->
+  <section id="register">
+    <h2>Register</h2>
+    <form id="registerForm">
+      <input type="text" id="username" placeholder="Username" required /><br/>
+      <input type="email" id="registerEmail" placeholder="Email" required /><br/>
+      <input type="password" id="registerPassword" placeholder="Password" required /><br/>
+      <button type="submit">Register</button>
+    </form>
+  </section>
+
+  <!-- Script Section -->
+  <script>
+    // Show/Hide Sections
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // Load Blogs
+    fetch('http://localhost:5000/api/blogs')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('blogs');
+        data.forEach(blog => {
+          container.innerHTML += `
+            <div class="blog-card">
+              <h2>${blog.title}</h2>
+              <img src="http://localhost:5000/uploads/${blog.image}" width="200" />
+              <p><strong>${blog.description}</strong></p>
+              <p>${blog.content}</p>
+              <button onclick="deleteBlog('${blog._id}')">Delete</button>
+            </div>
+          `;
+        });
+      });
+
+    // Delete Blog
+    function deleteBlog(id) {
+      const token = localStorage.getItem('token');
+      fetch(`http://localhost:5000/api/blogs/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(() => location.reload());
+    }
+
+    // Create Blog
+    document.getElementById('blogForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const token = localStorage.getItem('token');
+      const res = await fetch('http://localhost:5000/api/blogs', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
+      });
+      if (res.ok) {
+        alert('Blog created');
+        location.reload();
+      } else {
+        alert('Error posting blog');
+      }
+    };
+
+    // Login
+    document.getElementById('loginForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const res = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        alert('Login successful');
+        showSection('blogPage');
+      } else {
+        alert('Login failed');
+      }
+    };
+
+    // Register
+    document.getElementById('registerForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+      alert('Registration successful');
+      showSection('login');
+    };
+  </script>
+</body>
+</html>
+-> style.css
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+nav {
+  background-color: #333;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+nav button {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+nav button:hover {
+  background-color: #007bff;
+}
+
+section {
+  display: none;
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
+}
+
+section.active {
+  display: block;
+}
+
+h1, h2 {
+  color: #333;
+  text-align: center;
+}
+
+form input,
+form textarea,
+form button {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+.blog-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.blog-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.blog-card h2 {
+  margin-top: 0;
+}
+
+.blog-card button {
+  background-color: crimson;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.blog-card button:hover {
+  background-color: darkred;
+}
